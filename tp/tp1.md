@@ -22,7 +22,17 @@ Et exécutez-le :
 
 L'argument `-cp .` vous permet d'inclure le répertoire courant (qui doit contenir le fichier bytecode pour la JVM nommé `HelloWorld.class`) au `classpath`. Scala cherchera donc dans ce répertoire les classes correspondantes.
 
-## Tester les exemples vus en cours
+## Échauffement sur les listes
+
+Écrivez plusieurs fonctions qui :
+
+- Affiche tous éléments d'une liste d'`Int`
+- Transforme une liste d'`Int` en une liste de leurs valeurs absolues
+- Ne garde que les éléments négatifs d'une liste. Écrivez deux versions, une en utilisant `.filter` une sans.
+- Calcule le nombre d'éléments d'une liste (sans utiliser `.length`)
+- Inverse une liste (sans utiliser `.reverse`). Écrivez une version avec `foldLeft`, l'autre avec un `match`.
+
+## Testez les exemples du cours
 
 ```scala
 object TestFactorial {
