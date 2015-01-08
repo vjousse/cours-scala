@@ -1,0 +1,10 @@
+#vjousse .reveal {
+  font-family: "Lato", sans-serif;
+  font-size: 30px;
+  font-weight: normal;
+  letter-spacing: -0.02em;
+  color: #657b83; }
+
+#vjousse .reveal pre code {
+    max-height: 500px;
+}

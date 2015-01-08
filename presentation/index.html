@@ -1,0 +1,1445 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>SCALA - Programmation fonctionnelle avancée</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/solarized.css" id="theme">
+		<link rel="stylesheet" href="css/theme/vjousse.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body id="vjousse">
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>SCALA</h1>
+					<h3>Programmation fonctionnelle avancée</h3>
+					<p>
+                        <small>Créé par <a href="http://vincent.jousse.org">Vincent Jousse</a> / <a href="http://twitter.com/vjousse">@vjousse</a></small>
+					</p>
+				</section>
+				<section>
+                    <section>
+                        <h2>Présentation</h2>
+                        <ul>
+                            <li>Maître de conférences associé à mi-temps</li>
+                            <li>Chef d'entreprise : <strong><a href="http://voxolab.com">Voxolab</a></strong></li>
+                            <li>vincent.jousse@univ-lemans.fr</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Scala et moi</h2>
+                        <ul>
+                            <li>Premiers pas en 2011</li>
+                            <li>Startup <strong>Jirafe</strong></li>
+                            <li>Quelques projets personnels depuis</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Scala et vous</h2>
+                        <ul>
+                            <li>Première année à l'université</li>
+                            <li>Programmation fonctionnelle « utile »</li>
+                            <li>Améliorer votre programmation « impérative »</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>De quoi parle-t-on ?</h1>
+                    </section>
+                    <section>
+                        <p>« La <strong>programmation fonctionnelle</strong> est un <strong>paradigme de programmation</strong> qui considère le calcul en tant qu'évaluation de fonctions mathématiques et <strong>rejette le changement d'état et la mutation des données</strong>.</p><p>Elle souligne <strong>l'application des fonctions</strong>, contrairement au modèle de programmation impérative qui met en avant <strong>les changements d'état</strong>. »</p>
+                    </section>
+
+                    <section>
+                        <h1>Et pourquoi en parle-t-on maintenant ?</h1>
+                    </section>
+                    <section>
+                        <h2>Ça date !</h2>
+                        <ul>
+                            <li>Lisp (1958), ML (1973)</li>
+                            <li class="fragment">Mais ça revient à la mode !</li>
+                            <li class="fragment">Erlang (1995), Scala (2003), F# (2005), Clojure (2007)</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Exemples</h2>
+
+                        <ul>
+                            <li>Le chat Facebook (ejabberd) : <span class="fragment"><strong class="orange">Erlang</strong></span></li>
+                            <li>WhatsApp : <span class="fragment"><strong class="orange">Erlang</strong></span></li>
+                            <li>Le moteur de recherche de Twitter : <span class="fragment"><strong class="orange">Scala</strong></span></li>
+                            <li>Serveur Call of Duty : <span class="fragment"><strong class="orange">Erlang</strong></span></li>
+                            <li>Ils utilisent Scala : <span class="fragment"><strong class="orange">Apple, Linkedin, Foursquare, Netflix, Tumblr, …</strong></span></li>
+                            <li><span class="fragment">…</span></li>
+
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Quel problème majeur à résoudre ?</h2>
+                        <h2 class="fragment red">La mise à l'échelle</h2>
+                        <p class="fragment">Hum… c'est à dire ?</p>
+                    </section>
+                    <section>
+                        <h2>Un peu de perspective</h2>
+                        <ul>
+                            <li>2000/2004 : <strong>Pentium 4</strong> à <strong class="cyan">3,8 Ghz</strong></li>
+                            <li>2012 : <strong>Intel Core i7</strong> à <strong class="cyan">3,5 GHz</strong></li>
+                            <li>Et pourtant les machines vont plus vites !</li>
+                            <li class="fragment">C'est le <strong>nombre de cœurs</strong> qui augmente</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <h2>La programmation concurentielle</h2>
+                    <p>Les <strong>threads</strong>, les <strong>sémaphores</strong> et surtout les <strong class="red">dead-locks</strong> !</p>
+                    <p class="fragment">Compliqué (voire impossible) à réellement maitriser.</p>
+                </section>
+
+
+                <section>
+                    <section>
+                        <h2>Comment pourrait-on résoudre ce problème ?</h2>
+                        <p class="fragment">On n'autorise plus les variables !</p>
+                        <p class="fragment">On parle d'<strong class="red">immutabilité</strong></p>
+                    </section>
+
+                </section>
+
+                <section>
+                        <h2>Java</h2>
+                        <pre><code data-trim class="java">
+int i;
+for(i = 0; i &lt; myArray.length; i++) {
+    println(myArray[i]);
+}
+                        </code></pre>
+                        <h2 style="padding-top: 60px" class="fragment">Scala</h2>
+                        <pre class="fragment"><code data-trim class="scala">
+                        myArray.map(println)
+                        </code></pre>
+
+                </section>
+
+                <section>
+                    <h2>Ça change beaucoup de choses !</h2>
+                    <ul>
+                        <li>Comment on itère ? <strong>Plus d'i++ !</strong></li>
+                        <li>Comment on accumule ? <strong>Plus de a = a + b</strong></li>
+                        <li>Comment on <strong>programme</strong> ?!</li>
+                        <li class="fragment">On utilise <strong>des fonctions en paramètre de fonctions</strong></li>
+                    </ul>
+                    <p class="fragment" style="padding-top: 40px;"><strong>Higher-order functions :</strong> fonctions d'ordre supérieur</p>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Les 3 axes du cours</h1>
+                    </section>
+                    <section>
+                        <h2>Scala</h2>
+                    </section>
+                    <section>
+                        <h2>La programmation fonctionnelle</h2>
+                    </section>
+                    <section>
+                        <h2>La programmation concurrente</h2>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>SCALA</h1>
+                    </section>
+                    <section>
+                        <h2>De quoi parle-t-on ?</h2>
+                        <ul>
+                            <li class="fragment">Créé en 2005, (C 1972, C++ 1982, java 1995, ruby 1995)</li>
+                            <li class="fragment">JVM</li>
+                            <li class="fragment">Orienté Objet</li>
+                            <li class="fragment">Statiquement typé</li>
+                            <li class="fragment">Fonctionnel (ou pas)</li>
+                            <li class="fragment">Moderne</li>
+                        </ul>
+                    </section>
+                </section>
+                <section>
+                    <h1>Et si on essayait ?</h1>
+                </section>
+                <section>
+                    <h2>Interpréteur SCALA (REPL)</h2>
+
+                    <p>Lançons le REPL</p>
+                    <pre><code data-trim class="bash">
+scala
+                    </code></pre>
+                    <p>Testons un peu de code</p>
+                    <pre><code data-trim class="scala">
+scala> 8 * 5 + 2
+res0: Int = 42
+                    </code></pre>
+
+<pre><code data-trim class="scala">
+scala> 0.5 * res0
+res1: Double = 21.0
+</code></pre>
+<pre><code data-trim class="scala">
+scala> "Hello, " + res0
+res2: java.lang.String = Hello, 42
+</code></pre>
+<pre><code data-trim class="scala">
+scala> res2.toUpperCase
+res3: String = HELLO, 42
+</code></pre>
+                </section>
+                <section>
+                    <h2>Les valeurs et les variables</h2>
+                    <p>Les valeurs (le bien)</p>
+<pre><code data-trim class="scala">
+scala> val answer = 8 * 5 + 2
+answer: Int = 42
+</code></pre>
+<pre><code data-trim class="scala">
+scala> 0.5 * answer
+res3: Double = 21.0
+</code></pre>
+<pre><code data-trim class="scala">
+scala> answer = 0
+&lt;console&gt;:6: error: reassignment to val
+</code></pre>
+                    <p>Les variables (le mal)</p>
+<pre><code data-trim class="scala">
+var counter = 0
+counter = 1 // OK, can change a var
+</code></pre>
+                </section>
+
+                <section>
+                    <h2>L'inférence de type</h2>
+
+                    <p>Si on ne spécifie pas le type, il l'infère</p>
+<pre><code data-trim class="scala">
+scala> val answer = 8 * 5 + 2
+answer: Int = 42
+</code></pre>
+
+                    <p>On peut aussi lui spécifier le type</p>
+<pre><code data-trim class="scala">
+scala> val answer: Int = 8 * 5 + 2
+answer: Int = 42
+</code></pre>
+                    <p>Ou peut aussi utiliser le type « générique »</p>
+<pre><code data-trim class="scala">
+scala> val answer: Any = 8 * 5 + 2
+answer: Any = 42
+</code></pre>
+
+                    <p>Mais il ne nous laissera pas faire n'importe quoi</p>
+<pre><code data-trim class="scala">
+scala> val answer: String = 8 * 5 + 2
+&lt;console&gt;:7: error: type mismatch;
+</code></pre>
+                </section>
+                <section>
+                    <h2>Quelques types</h2>
+                    <p>Les <strong>chaînes de caractères</strong> : String (java.lang.String)</p>
+                    <p>Les <strong>types numériques</strong> : Byte, Char, Short, Int, Long, Float, and Double, Boolean</p>
+                    <p>Important : ces types sont des <strong>classes</strong></p>
+<pre><code data-trim class="scala">
+scala> 1.toString()
+res7: String = 1
+</code></pre>
+<pre><code data-trim class="scala">
+scala> 1.to(10)
+res8: scala.collection.immutable.Range.Inclusive = Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+</code></pre>
+                </section>
+                <section>
+                    <h2>Appels de fonctions</h2>
+                    <p>On peut omettre les . et ()</p>
+<pre><code data-trim class="scala">
+scala> 1 to 10
+res9: scala.collection.immutable.Range.Inclusive = Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+</code></pre>
+<pre><code data-trim class="scala">
+scala> 1 + 2
+res10: Int = 3
+</code></pre>
+<pre><code data-trim class="scala">
+scala> 1.+(2)
+res11: Int = 3
+</code></pre>
+                <p>Pas de paramètres, pas de parenthèses</p>
+<pre><code data-trim class="scala">
+scala> "Hello".distinct
+res13: String = Helo
+</code></pre>
+                </section>
+
+                <section>
+                    <h2>Définition de fonctions</h2>
+<pre><code data-trim class="scala">
+def test(n: Int, p: String): String = {
+    // Do something here
+    println(p)
+    p
+}
+</code></pre>
+<p>Pas de <strong>return</strong> :</p>
+<p>La valeur renvoyée par la dernière ligne est automatiquement retournée.</p>
+<p>Pas de <strong>;</strong></p>
+                </section>
+                <section>
+                    <section>
+                        <h2>Structures de contrôle (1/3)</h2>
+                        <h3>If</h3>
+<pre><code data-trim class="scala">
+var s = 0
+if (x > 0) s = 1 else s = -1
+
+//pareil que
+if (x > 0) {
+    s = 1
+} else {
+    s = -1
+}
+</code></pre>
+    <p class="fragment">Mais on veut éviter la mutabilité</p>
+<pre class="fragment"><code data-trim class="scala">
+val s = if (x > 0) 1 else -1
+</code></pre>
+    <p class="fragment">Toutes les structures de contrôle retournent une valeur.<p>
+    <p class="fragment">En fait, en SCALA, <strong>toute instruction retourne une valeur (et donc un type)</strong>.<p>
+                    </section>
+                    <section>
+                        <h2>Structures de contrôle (2/3)</h2>
+                        <h3>While</h3>
+<pre><code data-trim class="scala">
+while (n > 0) {
+    r=r*n
+    n -= 1
+}
+</code></pre>
+                        <h3>For</h3>
+<pre><code data-trim class="scala">
+for (i <- 1 to n)
+    r=r*i
+</code></pre>
+<pre><code data-trim class="scala">
+val s = "Hello"
+var sum = 0
+for (i <- 0 until s.length)
+    sum += s(i)
+</code></pre>
+    <p class="fragment">=> <strong>on ne les utilise jamais comme cela</strong><p>
+                    </section>
+                    <section>
+                        <h2>Structures de contrôle (3/3)</h2>
+                        <h3>Match/Case</h3>
+<pre><code data-trim class="scala">
+val x: Int = 3
+x match {
+    case 1 => "one"
+    case 2 => "two"
+    case _ => "many"
+}
+</code></pre>
+    <p>Ressemble à switch/case classique</p>
+    <p>=> En réalité bien plus puissant et <strong>beaucoup utilisé en programmation fonctionnelle</strong></p>
+                    </section>
+                </section>
+                <!--
+                <section>
+                    <h2>La méthode <em>apply</em></h2>
+<pre><code data-trim class="scala">
+scala> "Hello"(4)
+res14: Char = o
+</code></pre>
+<p>Un raccourci pour :</p>
+<pre><code data-trim class="scala">
+"Hello".apply(4)
+</code></pre>
+<p>Définie comme ceci :</p>
+<pre><code data-trim class="scala">
+def apply(n: Int): Char
+</code></pre>
+                </section>
+                -->
+                <section>
+                    <section>
+                        <h2>Les classes et les objets</h2>
+                    </section>
+                    <section>
+                    <h2>Une classe classique</h2>
+<pre><code data-trim class="scala">
+class Test(
+  val myFirstValue: String,
+  mySecondValue: Int) {
+
+  def testFunction(t: String): Unit =
+    println(t)
+
+
+  def add(v1: Int): Int =
+    mySecondValue + v1
+
+}
+</code></pre>
+<pre><code data-trim class="scala">
+val test = new Test("hop", 2)
+println(test.myFirstValue)
+// Erreur
+println(test.mySecondValue)
+</code></pre>
+                    </section>
+                    <section>
+                    <h2>Un objet singleton</h2>
+                    <p>Sert à créer des instances d'une classe. On l'appelle le « companion object ».</p>
+                    <p>Ses méthodes sont « statiques ».</p>
+<pre><code data-trim class="scala">
+object Test {
+  def createTest() = {
+    val test = new Test("hop", 2)
+    println(test.add(3))
+  }
+}
+</code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                    <h2><em>case</em> classe et pattern matching</h2>
+<pre><code data-trim class="scala">
+case class Test(
+  val myFirstValue: String,
+  mySecondValue: Int) {
+
+  def testFunction(t: String): Unit =
+    println(t)
+
+  def add(v1: Int): Int =
+    mySecondValue + v1
+
+}
+</code></pre>
+                    </section>
+                    <section>
+                    <h2>Le switch</h2>
+<pre><code data-trim class="java">
+switch (value) {
+  case 8:
+  case 10:
+    doSomething();
+    break;
+
+  case 12:
+    doSomethingElse();
+    break;
+
+  default:
+    doDefault();
+}
+</code></pre>
+                    </section>
+
+                    <section>
+                    <h2>Le match</h2>
+<pre><code data-trim class="scala">
+value match {
+  case 8 | 10 => doSomething
+  case 12 => somethingElse
+  case _ => doDefault
+}
+</code></pre>
+                    </section>
+
+                    <section>
+                    <h2>Prenons un exemple</h2>
+<pre><code data-trim class="scala">
+
+abstract class Character {
+    def name: String
+}
+case class Civilian(name: String, wealth: Int) extends Character
+case class SuperHero(name: String, powers: List[String], alterEgo: Option[Civilian])
+  extends Character
+case class Enemy(name: String, archEnemy: SuperHero) extends Character
+
+</code></pre>
+                    </section>
+                    <section>
+<pre><code data-trim class="scala">
+abstract class Character {
+    def name: String
+}
+
+case class Civilian(name: String, wealth: Int) extends Character
+case class SuperHero(name: String, powers: List[String], alterEgo: Option[Civilian])
+  extends Character
+case class Enemy(name: String, archEnemy: SuperHero) extends Character
+
+val TonyStark = Civilian("Tony Stark", 1000000)
+val BruceWayne = Civilian("Bruce Wayne", 1000000)
+val ClarkKent = Civilian("Clark Kent", 1000)
+
+val IronMan = SuperHero("Iron Man", List("SuperhumanStrength", "Genius", "Cyborg"),
+                        Some(TonyStark))
+val Batman = SuperHero("Batman", List("Genius", "Gadgets"), Some(BruceWayne))
+val Superman = SuperHero("SuperMan", List("SuperhumanStrength", "Invulnerability"),
+                         Some(ClarkKent))
+val Wolverine = SuperHero("Wolverine", List("SuperhumanStrength", "Invulnerability"), None)
+</code></pre>
+                    </section>
+                    <section>
+                    <h2>Petite question</h2>
+                    <p>Quels sont les super pouvoirs d'une <strong>personne</strong> qui est un <strong>super-héros</strong> et dont l'alter égo est <strong>Tony Stark</strong> ?</p>
+                    </section>
+                    <section>
+                    <h2>Réponse en Java</h2>
+<pre><code data-trim class="java">
+if(person instanceof SuperHero) {
+  final SuperHero hero = (SuperHero) person;
+  if(hero.alterEgo.equals(tonyStark)) {
+    return hero.powers;
+  } else {
+    return null;
+  }
+} else {
+  return null;
+}
+</code></pre>
+                    </section>
+                    <section>
+                    <h2>Réponse en Scala</h2>
+<pre><code data-trim class="scala">
+person match {
+  case SuperHero(_, powers, Some(TonyStark)) => Some(powers)
+  case _ => None
+}
+</code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <h2>Les imports</h2>
+                    <p>Importer une fonction</p>
+<pre><code data-trim class="scala">
+scala> import math.sqrt
+import math.sqrt
+scala> sqrt(4)
+res15: Double = 2.0
+</code></pre>
+                    <p>En importer plusieurs</p>
+<pre><code data-trim class="scala">
+scala> import math.{sqrt, pow}
+import math.{sqrt, pow}
+scala> pow(2, 2)
+res16: Double = 4.0
+</code></pre>
+                    <p>Tout importer</p>
+<pre><code data-trim class="scala">
+scala> import math._
+import math._
+scala> min(3, Pi)
+res17: Double = 3.0
+</code></pre>
+                </section>
+                <section>
+                    <h2>Le Hello World</h2>
+<pre><code data-trim class="scala">
+object HelloWorld {
+    def main(args: Array[String]) {
+        println("Hello, world!")
+    }
+}
+</code></pre>
+<p>ou</p>
+<pre><code data-trim class="scala">
+object HelloWorld extends App {
+    println("Hello, world!")
+}
+</code></pre>
+<pre><code data-trim class="bash">
+scalac HelloWorld.scala
+scala -classpath . HelloWorld
+</code></pre>
+                </section>
+
+                <section>
+                    <h1>La programmation fonctionnelle</h1>
+                </section>
+                <section>
+                    <section>
+                        <h3>Qu'est-ce que la programmation fonctionnelle ?</h3>
+                        <p style="padding-bottom: 30px" class="fragment">C'est une façon d'écrire des programmes en n'utilisant que des <em><strong>fonctions pures</strong></em>.</p>
+                        <h3 class="fragment">Qu'est-ce qu'une fonction pure ?</h3>
+                        <p style="padding-bottom: 30px" class="fragment">C'est une fonction sans <em><strong>effet de bord</strong></em> (side effect).</p>
+                        <h3 class="fragment">Qu'est-ce qu'une fonction avec effet de bord ?</h3>
+                        <p class="fragment">C'est une fonction qui fait autre chose que simplement <strong>retourner un résultat</strong>.</p>
+                    </section>
+                    <section>
+                        <h3>Quelques exemples</h3>
+                        <ul>
+                            <li>Modifier une variable</li>
+                            <li>Modifier le contenu d'une structure de données</li>
+                            <li>Changer l'état d'un objet (setter)</li>
+                            <li>Retourner une exception</li>
+                            <li>Afficher quelque chose</li>
+                            <li>Lire ou écrire un fichier</li>
+                            <li>…</li>
+                        </ul>
+                        <p>On parle de <strong>transparence référentielle</strong></p>
+                        <p class="fragment" style="padding-top:30px;">Mais on ne peut plus rien faire ?!</p>
+                        <p class="fragment" style="padding-top:30px;">En fait si, mais il va falloir s'adapter.</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Comment écrire une boucle en fonctionnel ?</h2>
+                        <p class="fragment">En utilisant de la récursion !</p>
+                        <p class="fragment">Essayons en écrivant <strong>factoriel</strong></p>
+                    </section>
+                    <section>
+                        <h2>Factoriel</h2>
+                        <p>Signature</p>
+<pre><code data-trim>
+def factorial(n: Int): Int
+</code></pre>
+<p class="fragment">Petit rappel <strong>factorial(5)</strong> : 1 * 2 * 3 * 4 * 5 = 120</p>
+<p class="fragment">À vous de jouer !</p>
+<pre class="fragment"><code data-trim>
+def factorial(n:Int):Int = if (n==0) 1 else n * factorial(n-1)
+</code></pre>
+                   </section>
+                    <section>
+<pre><code data-trim>
+def factorial(n: Int): Int = {
+
+    def go(n: Int, acc: Int): Int =
+        if (n <= 0) acc
+        else go(n-1, n*acc)
+
+    go(n, 1)
+}
+</code></pre>
+<p><code>factorial(5) =></code></p>
+<p>go(5,1) => go(5-1,5*1) => go(4-1, 4*5*1)</code></p>
+<p>go(3-1,3*4*5*1) => go(2-1,2*3*4*5*1) => go(1-1, 1*2*3*4*5*1)</code></p>
+                    </section>
+                    <section>
+                        <h2>Ce type de fonction existe déjà en Scala</h2>
+                        <p><code><strong>map, flatMap, filter, foldLeft, foldRight, …</strong></code></p>
+                    </section>
+                    <section>
+                        <h2>Exemple pour factorial</h2>
+                        <p>Factorial peut s'écrire comme ça :</p>
+<pre><code data-trim>
+def factorial(n: Int): Int =
+  1.to(n).foldLeft(1)((a,b) => a * b)
+</code></pre>
+<p>=> Nous détaillerons cela un peu plus loin</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Passer des fonctions en paramètre</h2>
+                        <p>Ou comment écrire notre première fonction de haut-niveau.</p>
+                        <p class="fragment">Partons d'un petit exemple</p>
+                    </section>
+                    <section>
+                        <h2>Afficher factorial(7)</h2>
+<pre><code data-trim>
+object MyModule {
+    def factorial(n: Int): Int = {
+
+        def go(n: Int, acc: Int): Int =
+            if (n <= 0) acc
+            else go(n-1, n*acc)
+
+        go(n, 1)
+    }
+
+    private def formatFactorial(n: Int) = {
+        val msg = "The factorial of %d is %d."
+        msg.format(n, factorial(n))
+    }
+
+    def main(args: Array[String]): Unit = {
+        println(formatFactorial(7))
+    }
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Ajoutons la fonction abs</h2>
+                        <p>Qui calcule la valeur absolue d'un nombre</p>
+
+
+<pre><code data-trim>
+object MyModule {
+    def abs(n: Int): Int =
+        if (n < 0) -n
+        else n
+
+    def factorial(n: Int): Int = {
+
+        def go(n: Int, acc: Int): Int =
+            if (n <= 0) acc
+            else go(n-1, n*acc)
+
+        go(n, 1)
+    }
+
+    //…
+
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Et affichons son résultat</h2>
+<pre><code data-trim>
+object MyModule {
+
+    //……
+
+    private def formatFactorial(n: Int) = {
+        val msg = "The factorial of %d is %d."
+        msg.format(n, factorial(n))
+    }
+
+    private def formatAbs(x: Int) = {
+        val msg = "The absolute value of %d is %d."
+        msg.format(x, abs(x))
+    }
+
+    def main(args: Array[String]): Unit = {
+        println(formatFactorial(7))
+        println(formatAbs(-2))
+    }
+
+}
+</code></pre>
+<p>=> éviter la redondance</p>
+                    </section>
+                    <section>
+
+<pre><code data-trim>
+object MyModule {
+    def abs(n: Int): Int =
+        if (n < 0) -n
+        else n
+
+    def factorial(n: Int): Int = {
+        def go(n: Int, acc: Int): Int =
+            if (n <= 0) acc
+            else go(n-1, n*acc)
+
+        go(n, 1)
+    }
+
+    def formatResult(name: String, n: Int, f: Int => Int) = {
+        val msg = "The %s of %d is %d."
+        msg.format(name, n, f(n))
+    }
+
+    def main(args: Array[String]): Unit = {
+        println(formatResult("factorial", 7, factorial))
+        println(formatResult("absolute value", -2, abs))
+    }
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Fonctions « inline »</h2>
+<pre><code data-trim>
+object MyModule {
+
+    //...
+
+    def formatResult(name: String, n: Int, f: Int => Int) = {
+        val msg = "The %s of %d is %d."
+        msg.format(name, n, f(n))
+    }
+
+    def main(args: Array[String]): Unit = {
+        println(formatResult("factorial", 7, factorial))
+        println(formatResult("absolute value", -2, abs))
+        val f = (x:Int) => x + 1
+        println(formatResult("follower", 3, f)
+    }
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Fonctions anonymes</h2>
+<pre><code data-trim>
+object MyModule {
+
+    //...
+
+    def formatResult(name: String, n: Int, f: Int => Int) = {
+        val msg = "The %s of %d is %d."
+        msg.format(name, n, f(n))
+    }
+
+    def main(args: Array[String]): Unit = {
+        println(formatResult("factorial", 7, factorial))
+        println(formatResult("absolute value", -2, abs))
+        println(formatResult("follower", 3, (x:Int) => x + 1)
+    }
+}
+</code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Revenons à notre exemple de factorial</h2>
+<pre><code data-trim>
+def factorial(n: Int): Int =
+  1.to(n).foldLeft(1)((a,b) => a * b)
+</code></pre>
+
+                    </section>
+                    <section>
+<pre><code data-trim>
+scala> val n=5
+n: Int = 5
+
+scala> 1.to(n)
+res0: scala.collection.immutable.Range.Inclusive = Range(1, 2, 3, 4, 5)
+</code></pre>
+
+<pre class="fragment"><code data-trim>
+scala> 1.to(n).map(println)
+1
+2
+3
+4
+5
+res1: scala.collection.immutable.IndexedSeq[Unit] = Vector((), (), (), (), ())
+</code></pre>
+<pre class="fragment"><code data-trim>
+scala> 1.to(n).map( value => println(value + 2) )
+3
+4
+5
+6
+7
+res2: scala.collection.immutable.IndexedSeq[Unit] = Vector((), (), (), (), ())
+</code></pre>
+<pre class="fragment"><code data-trim>
+scala> 1.to(n).foldLeft(1)((a,b) => a * b)
+res3: Int = 120
+</code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Les structures de données fonctionnelles</h2>
+                    </section>
+                    <section>
+                        <p>Par définition, les structures de données fonctionnelles sont <strong>immutables</strong>.</p>
+                        <p>Pour ajouter un élément : on crée une nouvelle structure.</p>
+                    </section>
+                    <section>
+                        <h2>Les listes</h2>
+                        <p>C'est <strong class="red">LA</strong> structure de données la plus utilisée en programmation fonctionnelle.</p>
+                    </section>
+                    <section>
+                        <h2>Création de listes</h2>
+<pre><code data-trim class="scala">
+scala> val emptyList=List()
+emptyList: List[Nothing] = List()
+
+scala> val emptyList=List[Int]()
+emptyList: List[Int] = List()
+
+scala> 2 :: emptyList
+res5: List[Int] = List(2)
+
+scala> 3 :: res5
+res8: List[Int] = List(3, 2)
+
+scala> res8 ::: res5
+res9: List[Int] = List(3, 2, 2)
+
+scala> "Test" :: Nil
+res10: List[String] = List(Test)
+
+scala> List("Test")
+res11: List[String] = List(Test)
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Fonctions sur les listes</h2>
+<pre><code data-trim class="scala">
+scala> val testList = List("poire", "banane", "un", "deux", "hop")
+testList: List[String] = List(poire, banane, un, deux, hop)
+
+scala> testList.map(println)
+poire
+banane
+un
+deux
+hop
+res12: List[Unit] = List((), (), (), (), ())
+
+scala> testList.map(s => s + "y")
+res13: List[String] = List(poirey, bananey, uny, deuxy, hopy)
+
+scala> testList.filter(s => s.length == 4)
+res14: List[String] = List(deux)
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Et encore factorial !</h2>
+<pre><code data-trim class="scala">
+scala> val values = List(1,2,3,4,5)
+values: List[Int] = List(1, 2, 3, 4, 5)
+
+scala> values.foldLeft(1)((a,b) => a * b)
+res4: Int = 120
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Pattern matching</h2>
+<pre><code data-trim class="scala">
+values match {
+  case x :: xs => println(x)
+  case Nil     => println("empty")
+}
+</code></pre>
+<pre><code data-trim class="scala">
+values match {
+  case List(test, _, _*) => println(test)
+  case _                 => println("something else")
+}
+</code></pre>
+<p class="fragment">Comment calculer le produit d'une liste d'entiers ?</p>
+<ul class="fragment">
+    <li>Si liste vide => 1</li>
+    <li>Si liste commence par 0 => 0</li>
+    <li>Sinon on multiplie chaque élément entre eux</li>
+</ul>
+                    </section>
+                    <section>
+<pre><code data-trim class="scala">
+  def product(ds: List[Int]): Int = ds match {
+    case Nil      => 1
+    case 0 :: _   => 0
+    case x :: xs  => x * product(xs)
+  }
+</code></pre>
+
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>La gestion des erreurs</h2>
+                        <p>ou pourquoi utiliser <strong>null</strong> et les <strong>exceptions</strong> est une mauvaise idée</p>
+                    </section>
+
+                    <section>
+                        <h2>Le principal problème de null et des exceptions</h2>
+                        <h3 class="fragment">Ils ne sont pas typés !</h3>
+                        <p class="fragment">Il ne peuvent donc pas être vérifiés par le compilateur</p>
+                        <p class="fragment">=> Erreurs au runtime <code>java.lang.NullPointerException</code> et autres joyeusetés</p>
+                        <p class="fragment">=> Ils ne permettent pas d'assurer la transparence référentielle</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Prenons un exemple</h2>
+    <pre><code data-trim class="scala">
+    def mean(xs: List[Double]): Double =
+    if (xs.isEmpty)
+        throw new ArithmeticException("mean of empty list")
+    else xs.sum / xs.length
+    </code></pre>
+    <p>Notre fonction peut renvoyer un Double ou une exception !<p>
+    <p>Le type de notre fonction ne dit pas qu'elle peut renvoyer une valeur ou pas<p>
+    <p class="fragment">C'est là que le type <strong>Option</strong> vient à notre rescousse</p>
+
+                    </section>
+                    <section>
+                        <h2>Le type Option</h2>
+<pre><code data-trim class="scala">
+def mean(xs: List[Double]): Option[Double] =
+  if (xs.isEmpty) None
+  else Some(xs.sum / xs.length)
+</code></pre>
+<p class="fragment">Utilisation</p>
+
+<pre class="fragment"><code data-trim class="scala">
+val myList: List[Double] = List(0, 1, 2, 3)
+val myMean: Option[Double] = mean(myList)
+
+myMean match {
+    case Some(value) => println("The mean is " + value)
+    case None => println("Mean of an empty list")
+}
+
+println("The mean is " + myMean.getOrElse(0))
+
+println(myMean.map(v => "The mean is " + v).getOrElse("Mean of an empty list"))
+</code></pre>
+                    </section>
+                    <section>
+                        <p>Option remplace bien le <strong>null</strong></p>
+                        <p>=> mais on perd le message d'erreur de l'exception</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Le type Either</h2>
+<pre><code data-trim class="scala">
+def mean(xs: List[Double]): Either[String, Double] =
+    if (xs.isEmpty)
+        Left("mean of empty list!")
+    else
+        Right(xs.sum / xs.length)
+</code></pre>
+                    </section>
+
+                    <section>
+<pre><code data-trim class="scala">
+val myList: List[Double] = List(0, 1, 2, 3)
+val myMean: Either[String, Double] = mean(myList)
+
+myMean match {
+    case Left(error) => println(error)
+    case Right(value) => println("The mean is " + value)
+}
+
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Try, Success, Failure</h2>
+<pre><code data-trim class="scala">
+import scala.util.{Try, Success, Failure}
+
+def mean(xs: List[Double]): Try[Double] =
+    Try {
+        xs.sum / xs.length
+    }
+</code></pre>
+                    </section>
+
+                    <section>
+<pre><code data-trim class="scala">
+val myList: List[Double] = List(0, 1, 2, 3)
+val myMean: Try[Double] = mean(myList)
+
+myMean match {
+    case Failure(error) => println(error)
+    case Success(value) => println("The mean is " + value)
+}
+
+</code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Les tuples</h2>
+
+<pre><code data-trim class="scala">
+scala> val test = (42, "test")
+test: (Int, String) = (42,test)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+scala> val test2 = (42, "test", 0.5)
+test2: (Int, String, Double) = (42,test,0.5)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+scala> println(test2._1)
+42
+
+scala> println(test2._2)
+test
+
+scala> println(test2._3)
+0.5
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Déconstruction de tuples</h2>
+
+<pre><code data-trim class="scala">
+def getUserInfo() = {
+    ("Clem", 32, 70.0)
+}
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+val (name, age, weight) = getUserInfo
+println(name)
+println(age)
+println(weight)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+val (name, age, _) = getUserInfo
+val (name, _, _) = getUserInfo
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Notation spéciale</h2>
+
+<pre><code data-trim class="scala">
+val testTuple = 1 -> "a"
+</code></pre>
+
+<pre class="fragment"><code data-trim class="scala">
+val map = Map(1->"a", 2->"b")
+</code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Jouons avec les types</h2>
+                    </section>
+                    <section>
+                        <h2>Les listes</h2>
+
+<pre><code data-trim class="scala">
+val l = List(1, 2, 3, 4)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+l.map(a => a + 1)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+l.map(a => a + 0.5)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+l.map(a => a + 0.5).map(println)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+l.map(a => a + 0.5).map { v =>
+  println(v)
+  if(v > 2) true else false
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Le type Option</h2>
+
+<pre><code data-trim class="scala">
+val s = Some(1)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+s.map(a => a + 1)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+s.map(a => "test" + a)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+s match {
+    case Some(t) => t
+    case None => 0
+}
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+s.getOrElse(0)
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+s.map(a => Option(a)).getOrElse(None)
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Le type Either</h2>
+
+<pre><code data-trim class="scala">
+val x: Int = 3
+val result = x match {
+    case x if x >= 0 => Right(x)
+    case _ => Left("x inferior to 0")
+}
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+result match {
+    case Right(r) => println(r)
+    case Left(l) => println(l)
+}
+</code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Les fonctions polymorphiques</h2>
+                    </section>
+                    <section>
+                        <h2>Fonctions monomorphiques</h2>
+                        <p>Elles agissent sur un type de données</p>
+<pre><code data-trim class="scala">
+def sum(xs: List[Int]): Int =
+    xs.foldLeft(0)((a,b) => a + b)
+
+def sumRecursive(xs: List[Int]): Int = xs match {
+    case x :: xs => x + sumRecursive(xs)
+    case Nil => 0
+}
+</code></pre>
+                        <p>Les fonctions <strong>polymorphiques</strong> quant à elles marchent sur n'importe quel type de données</p>
+                    </section>
+                    <section>
+                        <h2>Fonctions polymorphiques</h2>
+<pre><code data-trim class="scala">
+  def sumPoly[A](xs: List[A], init: A, f: (A,A) => A): A =
+    xs.foldLeft(init)((a,b) => f(a, b))
+</code></pre>
+
+<pre class="fragment"><code data-trim class="scala">
+  def sumPoly2[A](xs: List[A], init: A, f: (A,A) => A): A =
+    xs.foldLeft(init)(f)
+</code></pre>
+
+<pre class="fragment"><code data-trim class="scala">
+def sumPolyRecursive[A](xs: List[A], init: A, f: (A,A) => A): A = xs match {
+    case x :: xs => f(x, sumPolyRecursive(xs, init, f))
+    case Nil => init
+}
+
+</code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Les fonctions et leurs types</h2>
+                    </section>
+                    <section>
+                        <p>La fonction map sur les listes</p>
+<pre><code data-trim class="scala">
+def map[B](f: (A) => B): List[B]
+</code></pre>
+                        <p class="fragment">La fonction flatMap sur les listes</p>
+<pre class="fragment"><code data-trim class="scala">
+def flatMap[B](f: (A) => List[B]): List[B]
+</code></pre>
+                        <p class="fragment">Que fait cette fonction ?</p>
+
+                        <p class="fragment">La fonction zip sur les listes</p>
+<pre class="fragment"><code data-trim class="scala">
+def zip[B](that: List[B]): List[(A, B)]
+</code></pre>
+                        <p class="fragment">Que fait cette fonction ?</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                    <h2>Quelques devinettes</h2>
+                    </section>
+                    <section>
+<pre><code data-trim class="scala">
+(1 to 10) map { _ * 2 }
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+val fileText = io.Source.fromFile("data.txt").mkString
+
+val fileLines = io.Source.fromFile("data.txt").getLines.toList
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+val (passed, failed) = List(49, 58, 76, 82, 88, 90) partition ( _ > 60 )
+</code></pre>
+                    </section>
+                    <section>
+<pre><code data-trim class="scala">
+val wordList = List("scala", "akka", "play framework", "sbt", "typesafe")
+val tweet = "This is an example tweet talking about scala and sbt."
+
+(wordList.foldLeft(false)( (a, b) => a || tweet.contains(b) ))
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+(wordList.foldLeft(false)( _ || tweet.contains(_) ))
+</code></pre>
+                    </section>
+                    <section>
+<pre><code data-trim class="scala">
+(1 to 4).map {
+    i => "Happy Birthday " + (if (i == 3) "dear NAME" else "to You")
+}.map { println }
+</code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                    <h2>Exercices</h2>
+                    </section>
+                    <section>
+                        <p>Écrivez une fonction qui prend en paramètre un entier <strong>n</strong> et qui affiche « Coucou » <strong>n</strong> fois.</p>
+                    </section>
+                    <section>
+                        <p>Écrivez une fonction qui prend en paramètre un entier <strong>n</strong> et qui affiche « Coucou » à chaque multiple de 3.</p>
+                    </section>
+                    <section>
+                        <p>Essayez d'écrire un programme qui affiche les nombres de 1 à 100. Mais pour les multiples de 3, afficher « Fizz » au lieu du nombre, pour les multiples de 5 afficher « Buzz » et pour les multiples des deux afficher « FizzBuzz ».</p>
+                    </section>
+                    <section>
+                        <h2>Le style Java</h2>
+<pre class="fragment"><code data-trim class="scala">
+for (i <- 1 to 100) {
+  if ( i % 3 == 0 && i% 5 == 0)
+    println(i +" = FizzBuzz")
+  else if (i % 3 == 0)
+    println(i +" = Fizz")
+  else if (i % 5 == 0)
+    println(i +" = Buzz")
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Le style Scala mais pas trop</h2>
+<pre class="fragment"><code data-trim class="scala">
+def fizzBuzz(x:Int) = {
+  if (x % 15 == 0)
+    "FizzBuzz"
+  else if (x % 3 == 0)
+    "Fizz"
+  else if (x % 5 == 0)
+    "Buzz"
+  else
+    x
+}
+(1 to 100).map(n => println(fizzBuzz(n)))
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Le style Scala</h2>
+<pre class="fragment"><code data-trim class="scala">
+1 to 100 map { n =>
+    println((n % 3, n % 5) match {
+        case (0, 0) => "FizzBuzz"
+        case (0, _) => "Fizz"
+        case (_, 0) => "Buzz"
+        case _ => n
+    })
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Le style Scala 2</h2>
+<pre class="fragment"><code data-trim class="scala">
+def fizzBuzz2(number: Int = 100): IndexedSeq[String] =
+    1 to number map { n =>
+        (n % 3, n % 5) match {
+            case (0, 0) => "FizzBuzz"
+            case (0, _) => "Fizz"
+            case (_, 0) => "Buzz"
+            case _ => n.toString
+        }
+    }
+
+println(fizzBuzz2().mkString("\n"))
+</code></pre>
+                    </section>
+                </section>
+                <section>
+                        <h1>La programmation concurrente</h1>
+                        <h2>Le système d'acteurs : akka.io</h2>
+                </section>
+                <section>
+                    <h2>Le principe</h2>
+                    <p>On crée de petites entités, les <strong>acteurs</strong> capables de répondre à des messages et d'en envoyer.</p>
+                    <p>Ces entités peuvent être distribuées sur la machine et à travers le réseau.</p>
+                </section>
+                <section>
+                    <h2>Le hello world</h2>
+
+<pre><code data-trim class="scala">
+import akka.actor.{ ActorRef, ActorSystem, ActorLogging, Props, Actor, Inbox }
+import scala.concurrent.duration._
+
+case class Greeting(who: String)
+
+class GreetingActor extends Actor with ActorLogging {
+  def receive = {
+    case Greeting(who) ⇒ log.info("Hello " + who)
+  }
+}
+
+object TestActor extends App {
+  val system = ActorSystem("MySystem")
+  val greeter = system.actorOf(Props[GreetingActor], name = "greeter")
+  greeter ! Greeting("Charlie Parker")
+}
+</code></pre>
+                </section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				slideNumber: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
