@@ -12,7 +12,7 @@ object HelloWorld {
 }
 ```
 
-Compilez le :
+Compilez-le :
 
     scalac HelloWorld.scala
 
@@ -92,7 +92,7 @@ En scala, il est possible de spécifier que l'on attend que notre fonction soit 
 
 Écrivez une fonction à récusivité terminale qui calcule les `n` premiers nombres de la suite de Fibonacci.
 
-Pour rappel, les deux premiers nombres de la suite sont `0` et `1`. The nième nombre est toujours la somme des deux précédents. La suite commence donc par `0`, `1`, `1`, `2`, `3`, `5`.
+Pour rappel, les deux premiers nombres de la suite sont `0` et `1`. Le nième nombre est toujours la somme des deux précédents. La suite commence donc par `0`, `1`, `1`, `2`, `3`, `5`.
 
 Voici la signature de la fonction attendue :
 
