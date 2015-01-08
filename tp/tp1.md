@@ -109,3 +109,9 @@ Voici la signature de la fonction attendue :
 ```scala
 def fib(n: Int): Int
 ```
+
+# Exercice 1
+
+- Écrivez un programme permettant d'afficher les arguments passés en paramètre à la console
+- Écrivez un programme permettant d'afficher le contenu d'un fichier
+- Couplez les deux programmes précédents pour afficher le contenu d'un fichier dont le nom est passé en paramètre à la console
