@@ -24,13 +24,15 @@ L'argument `-cp .` vous permet d'inclure le répertoire courant (qui doit conten
 
 ## Échauffement sur les listes
 
-Écrivez plusieurs fonctions qui :
+Écrivez les fonctions suivantes :
 
-- Affiche tous éléments d'une liste d'`Int`
-- Transforme une liste d'`Int` en une liste de leurs valeurs absolues
-- Ne garde que les éléments négatifs d'une liste. Écrivez deux versions, une en utilisant `.filter` une sans.
-- Calcule le nombre d'éléments d'une liste (sans utiliser `.length`)
-- Inverse une liste (sans utiliser `.reverse`). Écrivez une version avec `foldLeft`, l'autre avec un `match`.
+- Affichage de tous éléments d'une liste d'`Int`.
+- Transformation une liste d'`Int` en une liste de leurs valeurs absolues.
+- Filtrage d'une liste en ne gardant que les éléments négatifs d'une liste d'`Int`. Écrivez deux versions, une en utilisant `.filter` une sans.
+- Calcul du nombre d'éléments d'une liste (sans utiliser `.length`).
+- Inversion d'une liste (sans utiliser `.reverse`). Écrivez une version avec `foldLeft`, l'autre avec un `match`.
+
+Il est évident que la [documentation de l'API de Scala](http://www.scala-lang.org/api/current/) pourrait vous être utile, ainsi que le moteur de recherche spécialisé [Scalex](http://scalex.org/).
 
 ## Testez les exemples du cours
 
@@ -115,3 +117,4 @@ def fib(n: Int): Int
 - Écrivez un programme permettant d'afficher les arguments passés en paramètre à la console
 - Écrivez un programme permettant d'afficher le contenu d'un fichier
 - Couplez les deux programmes précédents pour afficher le contenu d'un fichier dont le nom est passé en paramètre à la console
+- Essayez plusieurs améliorations sur votre programme : n'afficher qu'une ligne sur 3, supprimer une chaine de caractère prédéfinie de chacune des lignes, compter le nombre de lignes, le nombre de mots et le nombre de caractères.
