@@ -112,7 +112,7 @@ Voici la signature de la fonction attendue :
 def fib(n: Int): Int
 ```
 
-# Exercice 1
+# Exercice
 
 - Écrivez un programme permettant d'afficher les arguments passés en paramètre à la console
 - Écrivez un programme permettant d'afficher le contenu d'un fichier
