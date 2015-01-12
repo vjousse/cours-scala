@@ -1249,6 +1249,10 @@ def sumPolyRecursive[A](xs: List[A], init: A, f: (A,A) => A): A = xs match {
 <pre><code data-trim class="scala">
 def map[B](f: (A) => B): List[B]
 </code></pre>
+                        <p>La fonction map sur les Option</p>
+<pre><code data-trim class="scala">
+def map[B](f: (A) => B): Option[B]
+</code></pre>
                         <p class="fragment">La fonction flatMap sur les listes</p>
 <pre class="fragment"><code data-trim class="scala">
 def flatMap[B](f: (A) => List[B]): List[B]
@@ -1371,17 +1375,224 @@ println(fizzBuzz2().mkString("\n"))
 </code></pre>
                     </section>
                 </section>
+
+                <section>
+                    <section>
+                        <h1>SBT</h1>
+                        <h2>Scala Build Tool</h2>
+                    </section>
+                    <section>
+                        <h2>Exemple de fichier</h2>
+                        <p>build.sbt</p>
+<pre><code data-trim class="scala">
+
+name := "My Project"
+
+version := "1.0"
+
+scalaVersion := "2.10.4"
+
+libraryDependencies +=
+"com.typesafe.akka" %% "akka-actor" % "2.4-SNAPSHOT"
+
+</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Dépendances multiples</h2>
+<pre><code data-trim class="scala">
+
+name := "My Project"
+
+version := "1.0"
+
+scalaVersion := "2.10.4"
+
+libraryDependencies +=
+"com.typesafe.akka" %% "akka-actor" % "2.4-SNAPSHOT"
+
+// Add multiple dependencies.
+libraryDependencies ++= Seq(
+  "net.databinder" %% "dispatch-google" % "0.7.8",
+  "net.databinder" %% "dispatch-meetup" % "0.7.8"
+)
+
+</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Ajouts de dépôts</h2>
+<pre><code data-trim class="scala">
+
+name := "My Project"
+
+version := "1.0"
+
+scalaVersion := "2.10.4"
+
+libraryDependencies +=
+"com.typesafe.akka" %% "akka-actor" % "2.4-SNAPSHOT"
+
+// Add multiple dependencies.
+libraryDependencies ++= Seq(
+  "net.databinder" %% "dispatch-google" % "0.7.8",
+  "net.databinder" %% "dispatch-meetup" % "0.7.8"
+)
+
+resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
+
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Exemples</h2>
+                        <p>Dans un shell</p>
+<pre><code data-trim class="scala">
+sbt clean
+sbt compile
+sbt run
+</code></pre>
+                        <p>Dans le terminal SBT</p>
+
+<pre><code data-trim class="scala">
+reload
+~compile
+</code></pre>
+                    </section>
+                </section>
+
                 <section>
                         <h1>La programmation concurrente</h1>
-                        <h2>Le système d'acteurs : akka.io</h2>
                 </section>
+
                 <section>
-                    <h2>Le principe</h2>
-                    <p>On crée de petites entités, les <strong>acteurs</strong> capables de répondre à des messages et d'en envoyer.</p>
-                    <p>Ces entités peuvent être distribuées sur la machine et à travers le réseau.</p>
-                </section>
+                    <section>
+                        <h2>La programmation non bloquante</h2>
+                        <h3>Les futures</h3>
+                    </section>
+                    <section>
+                        <p>Une <strong>Future</strong> est une sorte de boîte qui contient un résultat de type <em>T</em> qui n'est pas encore disponible.</p>
+                        <p>Une <strong>Future</strong> peut se compléter avec succès, ou avec une erreur (time out, exception, …).</p>
+                    </section>
+                    <section>
+<pre><code data-trim class="scala">
+def meanFuture(xs: List[Double]): Future[Double] = Future {
+
+  println("start computation...")
+
+  Thread.sleep(Random.nextInt(2000))
+
+  if (xs.isEmpty)
+      throw new ArithmeticException("mean of empty list")
+  else {
+      println("finishing computation...")
+      xs.sum / xs.length
+  }
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h2>Utilisation de callback</h2>
+<pre><code data-trim class="scala">
+
+import scala.util.{Success, Failure}
+meanFuture(List(1.0, 2.2, 3.6, 4.0)).onComplete {
+  case Success(mean) => println(s"the mean is $mean")
+  case Failure(ex) => println(ex)
+}
+</code></pre>
+                    <p>L'utilisation de callback peut vite devenir fouillie. Heureusement, les Future sont composables.</p>
+                    </section>
+                    <section>
+                        <!-- http://danielwestheide.com/blog/2013/01/09/the-neophytes-guide-to-scala-part-8-welcome-to-the-future.html -->
+                        <h2>Composer des Future</h2>
+
+<pre><code data-trim class="scala">
+
+import scala.util.{Success, Failure}
+
+val l = List(1.0, 2.2, 3.6, 4.0)
+meanFuture(l).map { mean =>
+  // We're in the Future doc!
+  println(s"the mean is $mean")
+}
+</code></pre>
+
+<pre class="fragment"><code data-trim class="scala">
+
+def anotherFuture(d: Double): Future[String] = Future { ... }
+
+meanFuture(l).map { mean =>
+  anotherFuture(mean)
+}
+</code></pre>
+
+<pre class="fragment"><code data-trim class="scala">
+
+val l = List(1.0, 2.2, 3.6, 4.0)
+val Future[Future[String]] = meanFuture(l).map { mean =>
+  anotherFuture(mean)
+}
+</code></pre>
+
+
+                    </section>
+                    <section>
+                        <!-- http://danielwestheide.com/blog/2013/01/09/the-neophytes-guide-to-scala-part-8-welcome-to-the-future.html -->
+                        <h2>Applatissons les Future</h2>
+
+
+<pre class="fragment"><code data-trim class="scala">
+
+val l = List(1.0, 2.2, 3.6, 4.0)
+val Future[String] = meanFuture(l).flatMap { mean =>
+  anotherFuture(mean)
+}
+</code></pre>
+                    </section>
+
+                    <section>
+                        <!-- http://danielwestheide.com/blog/2013/01/09/the-neophytes-guide-to-scala-part-8-welcome-to-the-future.html -->
+                        <h2>Et avec un For-comprehension</h2>
+
+<pre class="fragment"><code data-trim class="scala">
+
+for {
+    mean <- meanFuture(l)
+    value <- anotherFuture(mean)
+} yiedld(value)
+
+</code></pre>
+
+                    </section>
+
+                </section
                 <section>
-                    <h2>Le hello world</h2>
+                    <section>
+                        <section>
+                            <h2>Les acteurs</h2>
+                        </section>
+                        <section>
+                            <img src="multi_threading.jpg" title="Multi threading" />
+                        </section>
+                        <section>
+                            <h2>Le principe</h2>
+                            <p>On crée de petites entités, les <strong>acteurs</strong> capables de répondre à des messages et d'en envoyer.</p>
+                            <p>Ces entités peuvent être distribuées sur la machine et à travers le réseau.</p>
+                            <p>Elles sont gérées par un <code>ActorSystem</code></p>
+                        </section>
+                        <section>
+                            <h2>Le fichier build.sbt</h2>
+
+<pre><code data-trim class="scala">
+resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases"
+
+libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.2.3"
+</code></pre>
+                        </section>
+                    </section>
+
+                    <section>
+                        <h2>Le hello world</h2>
 
 <pre><code data-trim class="scala">
 import akka.actor.{ ActorRef, ActorSystem, ActorLogging, Props, Actor, Inbox }
@@ -1390,19 +1601,153 @@ import scala.concurrent.duration._
 case class Greeting(who: String)
 
 class GreetingActor extends Actor with ActorLogging {
-  def receive = {
-    case Greeting(who) ⇒ log.info("Hello " + who)
-  }
+    def receive = {
+        case Greeting(who) => log.info("Hello " + who)
+    }
 }
 
 object TestActor extends App {
-  val system = ActorSystem("MySystem")
-  val greeter = system.actorOf(Props[GreetingActor], name = "greeter")
-  greeter ! Greeting("Charlie Parker")
+    val system = ActorSystem("MySystem")
+    val greeter = system.actorOf(Props[GreetingActor], name = "greeter")
+    greeter ! Greeting("Vince")
 }
 </code></pre>
-                </section>
+                    </section>
+                    <section>
+                        <section>
+                            <h2>Créer l'ActorSystem</h2>
 
+<pre><code data-trim class="scala">
+import akka.actor.ActorSystem
+object Barista extends App {
+  val system = ActorSystem("Barista")
+  system.shutdown()
+}
+</code></pre>
+                        </section>
+                        <section>
+                            <h2>Définir un simple acteur</h2>
+<pre><code data-trim class="scala">
+sealed trait CoffeeRequest
+case object CappuccinoRequest extends CoffeeRequest
+case object EspressoRequest extends CoffeeRequest
+
+import akka.actor.Actor
+class Barista extends Actor {
+  def receive = {
+    case CappuccinoRequest => println("I have to prepare a cappuccino!")
+    case EspressoRequest => println("Let's prepare an espresso.")
+  }
+}
+</code></pre>
+
+                        </section>
+                        <section>
+                            <h2>Instancier un acteur</h2>
+<pre><code data-trim class="scala">
+val barista = new Barista // will throw exception
+</code></pre>
+<pre class="fragment"><code data-trim class="scala">
+import akka.actor.{ActorRef, Props}
+val barista: ActorRef = system.actorOf(Props[Barista], "Barista")
+</code></pre>
+
+                        </section>
+
+                        <section>
+                            <h2>Envoyer des messages</h2>
+<pre><code data-trim class="scala">
+barista ! CappuccinoRequest
+barista ! EspressoRequest
+println("I ordered a cappuccino and an espresso")
+</code></pre>
+<pre><code data-trim>
+I have to prepare a cappuccino!
+I ordered a cappuccino and an espresso
+Let's prepare an espresso.
+</code></pre>
+
+                        </section>
+
+                        <section>
+                            <h2>Répondre à un message</h2>
+<pre><code data-trim class="scala">
+case class Bill(cents: Int)
+case object ClosingTime
+class Barista extends Actor {
+  def receive = {
+    case CappuccinoRequest =>
+      sender ! Bill(250)
+      println("I have to prepare a cappuccino!")
+    case EspressoRequest =>
+      sender ! Bill(200)
+      println("Let's prepare an espresso.")
+    case ClosingTime => context.system.shutdown()
+  }
+}
+
+</code></pre>
+
+                        </section>
+
+                        <section>
+                            <h2>Créons un autre acteur</h2>
+<pre><code data-trim class="scala">
+case object CaffeineWithdrawalWarning
+
+class Customer(caffeineSource: ActorRef) extends Actor {
+  def receive = {
+    case CaffeineWithdrawalWarning => caffeineSource ! EspressoRequest
+    case Bill(cents) => println(s"I have to pay $cents cents, or else!")
+  }
+}
+</code></pre>
+
+                        </section>
+
+                        <section>
+                            <h2>Et faisons-les communiquer</h2>
+<pre><code data-trim class="scala">
+
+val barista = system.actorOf(Props[Barista], "Barista")
+val customer = system.actorOf(Props(classOf[Customer], barista), "Customer")
+customer ! CaffeineWithdrawalWarning
+barista ! ClosingTime
+</code></pre>
+<pre><code data-trim>
+Let's prepare an espresso.
+I have to pay 200 cents, or else!
+</code></pre>
+
+                        </section>
+
+                        <section>
+                            <h2>Des acteurs à état</h2>
+<pre><code data-trim class="scala">
+class Barista extends Actor {
+  var cappuccinoCount = 0
+  var espressoCount = 0
+  def receive = {
+    case CappuccinoRequest =>
+      sender ! Bill(250)
+      cappuccinoCount += 1
+      println(s"I have to prepare cappuccino #$cappuccinoCount")
+    case EspressoRequest =>
+      sender ! Bill(200)
+      espressoCount += 1
+      println(s"Let's prepare espresso #$espressoCount.")
+    case ClosingTime => context.system.shutdown()
+  }
+}
+</code></pre>
+                        </section>
+                        <section>
+                            <h2>Pour aller plus loin</h2>
+
+                            <p><a href="http://danielwestheide.com/blog/2013/02/27/the-neophytes-guide-to-scala-part-14-the-actor-approach-to-concurrency.html">The Neophyte's Guide to Scala Part 14: The Actor Approach to Concurrency</a></p>
+                            <p><a href="http://danielwestheide.com/blog/2013/03/20/the-neophytes-guide-to-scala-part-15-dealing-with-failure-in-actor-systems.html">The Neophyte's Guide to Scala Part 15: Dealing With Failure in Actor Systems</a></p>
+                        </section>
+                </section>
 			</div>
 
 		</div>
