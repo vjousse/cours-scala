@@ -5,9 +5,9 @@ __Rappel__ : Essayez d'avoir un maximum de fonctions pures, laissez les `printl
 Dans le cours, nous avons vu qu'un Super Héros pouvait avoir des pouvoirs phénoménaux. Implémentez la version du cours et répondez aux questions suivantes :
 
 - Quels sont les __super-héros__ qui sont __invulnérables__ ?
-- Quels sont les __civils__ qui gagnent __moins de 10000 euros__ et dont l'__alter-égo__ est __invulnérable__ ? 
 - Quels sont les __super-héros__ qui ont au moins 2 super-pouvoirs ?
 - Quel super-héros n'a pas d'alter-égo ?
+- Quels sont les __civils__ qui gagnent __moins de 10000 euros__ et dont l'__alter-égo__ est __invulnérable__ ? 
 
 Utilisez des structures de données pour stocker vos différents personnages, puis :
 
@@ -24,6 +24,10 @@ Dans cet exercice, nous allons essayer de structurer un « vrai programme » Sca
 Tout d'abord, écrivez le code qui va permettre de lire et d'écrire la liste des super-héros/civils/ennemis dans des fichiers. Choisissez le format de stockage que vous souhaitez, l'important, c'est que vous puissiez le relire ensuite (un format texte type CSV peut être une bonne idée).
 
 Attention, les codes qui lisent et écrivent dans des fichiers sont des codes « dangereux » : ils lancent souvent des exceptions ou peuvent renvoyer des `null`. Essayez de gérer cela de manière fonctionnelle.
+
+## Pour la beauté du geste
+
+Ré-écrivez une de vos fonctions de manière polymorphique.
 
 ## Organisation du code
 
