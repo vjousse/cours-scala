@@ -1320,12 +1320,15 @@ val tweet = "This is an example tweet talking about scala and sbt."
                         <h2>Le style Java</h2>
 <pre class="fragment"><code data-trim class="scala">
 for (i <- 1 to 100) {
+//(1 to 100).map { i =>
   if ( i % 3 == 0 && i% 5 == 0)
-    println(i +" = FizzBuzz")
+    println("FizzBuzz")
   else if (i % 3 == 0)
-    println(i +" = Fizz")
+    println("Fizz")
   else if (i % 5 == 0)
-    println(i +" = Buzz")
+    println("Buzz")
+  else
+    println(i)
 }
 </code></pre>
                     </section>
