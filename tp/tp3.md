@@ -21,9 +21,9 @@ Créez un fichier `build.sbt` avec le contenu suivant :
 
 
 ```scala
-    resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases"
+resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases"
 
-    libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.9"
+libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.9"
 ```
 
 Créez le répertoire `src/main/scala` : c'est ici que vous placerez votre code.
