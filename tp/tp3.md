@@ -37,11 +37,26 @@ Testez sbt :
 
 Tout d'abord, n'hésitez pas à lire ce [tutorial](http://danielwestheide.com/blog/2013/02/27/the-neophytes-guide-to-scala-part-14-the-actor-approach-to-concurrency.html) pour vous re-mémorer comment fonctionnent les acteurs.
 
-__Première étape__ :
+#### Première étape
 
 Commencez par créer les classes d'acteurs gérant les différentes notions ci-dessus. Faites tourner votre application avec un client, un serveur et un cuisinier. Nous partirons du principe qu'un client mange instantanément le plat qu'il reçoit. En revanche, le cuisinier passe du temps à préparer chaque repas, vous devons donc simuler ce temps grâce à `Thread.sleep(tempsEnMillisecondes)`.
 
 N'oubliez pas qu'un acteur peut avoir un état, c'est le seul endroit où vous serez autorisé à utiliser des `var`.
+
+De plus, au lieu d'utiliser des `println` dans vos acteurs, utilisez le logging fournit par `akka.actor.ActorLogging`, par exemple :
+
+```scala
+
+import akka.actor.{ Actor, ActorLogging }
+
+class TestActor extends Actor with ActorLogging {
+  def receive = {
+    case s: String => log.info(s)
+  }
+}
+
+
+```
 
 Voici un résumé du déroulement auquel au peut s'attendre :
 
@@ -56,7 +71,10 @@ Voici un résumé du déroulement auquel au peut s'attendre :
 
 Pour les actions du type `manger`, `payer`, etc, un simple `println($"Je mange le plat $meal")` suffira.
 
-__Deuxième étape__ :
+#### Deuxième étape
+
 Essayez de créer le nombre de serveurs, de cuisiniers et de clients demandé et faites marcher le tout. Vous devriez vous rendre compte que sélectionner quel serveur et/ou quel cuisinier doit recevoir le message n'est pas hyper pratique.
 
-Pour palier à ce problème, utilisez le LoadBalancer dont vous trouverez la documentation [sur le site d'akka](http://doc.akka.io/docs/akka/1.3.1/scala/routing.html).
+Pour palier à ce problème, nous allons utiliser la notion de [Routing avec akka](http://doc.akka.io/docs/akka/2.3.9/scala/routing.html). Nous allons créer 2 chefs, 3 serveurs et 5 clients.
+
+Pour l'instant, laissez le restaurant ouvert tout le temps, fermez-le « à la main » en faisant Control-C.
