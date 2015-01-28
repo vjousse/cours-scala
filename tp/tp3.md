@@ -43,7 +43,7 @@ Commencez par créer les classes d'acteurs gérant les différentes notions ci-d
 
 N'oubliez pas qu'un acteur peut avoir un état, c'est le seul endroit où vous serez autorisé à utiliser des `var`.
 
-De plus, au lieu d'utiliser des `println` dans vos acteurs, utilisez le logging fournit par `akka.actor.ActorLogging`, par exemple :
+De plus, au lieu d'utiliser des `println` dans vos acteurs, utilisez le logging fournit par `akka.actor.ActorLogging`, ça vous aidera à débugger plus tard. Par exemple :
 
 ```scala
 
@@ -58,7 +58,7 @@ class TestActor extends Actor with ActorLogging {
 
 ```
 
-Voici un résumé du déroulement auquel au peut s'attendre :
+Voici un résumé du déroulement auquel on peut s'attendre :
 
 - Le client commande X repas au hasard
 - Le serveur prend la commande et la passe au chef
@@ -69,7 +69,7 @@ Voici un résumé du déroulement auquel au peut s'attendre :
 - Le serveur prépare la facture et la transmet au client
 - Le client paye et s'en va (vous fermez alors le système d'acteurs)
 
-Pour les actions du type `manger`, `payer`, etc, un simple `println($"Je mange le plat $meal")` suffira.
+Pour les actions du type `manger`, `payer`, etc, un simple `println($"Je mange le plat $meal")` suffira. Vous allez surement avoir besoin de passer des acteurs en paramètre d'autres acteurs.
 
 #### Deuxième étape
 
@@ -77,4 +77,25 @@ Essayez de créer le nombre de serveurs, de cuisiniers et de clients demandé et
 
 Pour palier à ce problème, nous allons utiliser la notion de [Routing avec akka](http://doc.akka.io/docs/akka/2.3.9/scala/routing.html). Nous allons créer 2 chefs, 3 serveurs et 5 clients.
 
-Pour l'instant, laissez le restaurant ouvert tout le temps, fermez-le « à la main » en faisant Control-C.
+Voici comment créer un `pool` de 5 chefs :
+
+```scala
+import akka.routing.RoundRobinPool
+
+...
+
+val chefRouter: ActorRef = context.system.actorOf(Props[Chef].withRouter(RoundRobinPool(5)), "ChefRouter")
+```
+
+Ce `chefRouter` va créer un pool de 5 acteurs de type `Chef` et leur enverra les messages chacun leur tour car nous utilisons le `RoundRobinPool`. On envoie un message à un pool d'acteurs de la même façon qu'à un acteur classique, le routeur se débrouillera pour acheminer le message au prochain acteur.
+
+Un acteur peut créer d'autres acteurs lui-même, ça ne pose aucun souci. Vous pouvez accéder à son « système d'acteurs » par `context.system.actorOf(...)`.
+
+À noter que le client est peu regardant pour l'instant, s'il reçoit ses plats dans le désordre, il les mangera quand même ;)
+
+
+#### Améliorations possibles
+
+- Faites en sorte que les clients recoivent leurs plats dans l'ordre de la commande.
+- Calculez le temps d'attente de chaque client et le temps d'attente moyen du restaurant.
+- Implémentez le fait qu'un client met du temps à manger et qu'on ne devrait pas lui apporter ses plats suivants s'il n'a pas fini ceux d'avant.
