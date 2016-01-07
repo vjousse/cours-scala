@@ -314,17 +314,28 @@ res13: String = Helo
                 </section>
 
                 <section>
-                    <h2>Définition de fonctions</h2>
-<pre><code data-trim class="scala">
-def test(n: Int, p: String): String = {
-    // Do something here
-    println(p)
-    p
-}
+                    <section>
+                        <h2>Définition de fonctions</h2>
+    <pre><code data-trim class="scala">
+    def test(n: Int, p: String): String = {
+        // Do something here
+        println(p)
+        p
+    }
 </code></pre>
 <p>Pas de <strong>return</strong> :</p>
 <p>La valeur renvoyée par la dernière ligne est automatiquement retournée.</p>
 <p>Pas de <strong>;</strong></p>
+                    </section>
+                    <section>
+                        <h2>Tout est expression</h2>
+<p>En Scala tout est une expression : c'est à dire que tout retourne une valeur.</p>
+    <pre><code data-trim class="scala">
+val i = 3
+val p = if (i > 0) -1 else -2
+val q = if (true) "hello" else "world"
+</code></pre>
+                    </section>
                 </section>
                 <section>
                     <section>
@@ -615,9 +626,84 @@ scala -classpath . HelloWorld
                         <p class="fragment">C'est une fonction qui fait autre chose que simplement <strong>retourner un résultat</strong>.</p>
                     </section>
                     <section>
-                        <h3>Quelques exemples</h3>
+                        <h1>Mais concrêtement ?</h1>
+                    </section>
+                    <section>
+                        <p>En fait, chaque fonction dispose de deux ensembles d'entrées/sorties : vous n'en êtes certainement pas conscient pour l'instant.</p>
+                        <p>Prenons <strong>un exemple</strong> :</p>
+<pre><code data-trim class="java">
+public int square(int x) {
+    return x * x;
+}
+</code></pre>
+                        <p class="fragment">=> Une entrée (les paramètres), une sortie (le return).</p>
+                    </section>
+                    <section>
+                        <p>Et dans cet exemple, quelles sont les entrées/sorties ?</p>
+<pre><code data-trim class="java">
+public void processNext() {
+    Message message = InboxQueue.popMessage();
+
+    if (message != null) {
+        process(message);
+    }
+}
+</code></pre>
+                        <p>=> Pas de paramètres, pas de return.</p>
+                        <p class="fragment">On parle ici d'<strong>effets de bord</strong> (« side-effects »)</p>
+                    </section>
+                    <section>
+                        <h2>Effet de bord = Complexité</h2>
+<pre><code data-trim class="java">
+public boolean processMessage(Channel channel) {...}
+</code></pre>
+                        <ul class="fragment" style="padding-top:40px;">
+                            <li>Aucune idée de ce que fait cette fonction !</li>
+                            <li>Code très difficile à comprendre/tester : il faut connaître le monde qui entoure la fonction.</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h2>Comment s'en débarrasser ?</h2>
+                        <p>En déterrant tous les effets de bord !</p>
+                    </section>
+                    <section>
+                        <h2>Un petit exemple</h2>
+<pre><code data-trim class="java">
+public Program getCurrentProgram(TVGuide guide, int channel) {
+  Schedule schedule = guide.getSchedule(channel);
+
+  Program current = schedule.programAt(new Date());
+
+  return current;
+}
+</code></pre>
+                        <p>Êtes-vous capable de trouver l'effet de bord ?</p>
+                        <p>De quoi dépend cette fonction qui n'est pas spécifié en paramètre ?</p>
+                    </section>
+                    <section>
+<pre><code data-trim class="java">
+public Program getProgramAt(TVGuide guide, int channel, Date when) {
+  Schedule schedule = guide.getSchedule(channel);
+
+  Program program = schedule.programAt(when);
+
+  return program;
+}
+</code></pre>
+                    </section>
+                    <section>
+                        <h3>Désavantage</h3>
+                        <p style="padding-bottom: 20px;">Un paramètre en plus : c'est plus complexe</p>
+                        <div class="fragment">
+                            <h3>Avantages</h3>
+                            <p>En fait, ce n'est pas plus complexe (au contraire)</p>
+                            <p>C'est beaucoup beaucoup plus facile à tester</p>
+                            <p>Il est plus facile de raisonner avec cette fonction</p>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Quelques exemples d'effets de bord</h3>
                         <ul>
-                            <li>Modifier une variable</li>
                             <li>Modifier le contenu d'une structure de données</li>
                             <li>Changer l'état d'un objet (setter)</li>
                             <li>Retourner une exception</li>
@@ -628,6 +714,10 @@ scala -classpath . HelloWorld
                         <p>On parle de <strong>transparence référentielle</strong></p>
                         <p class="fragment" style="padding-top:30px;">Mais on ne peut plus rien faire ?!</p>
                         <p class="fragment" style="padding-top:30px;">En fait si, mais il va falloir s'adapter.</p>
+                    </section>
+                    <section>
+                        <h2>Finalement, qu'est-ce qu'une <em>fonction pure</em> ?</h2>
+                        <p>On pout dire qu'une fonction est pure lorsque toutes ces entrées sont <strong>déclarées comme telles</strong> et lorsque toutes ses sorties le sont aussi.</p>
                     </section>
                 </section>
                 <section>
