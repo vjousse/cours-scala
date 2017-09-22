@@ -84,7 +84,7 @@ object TestFactorial {
 }
 ```
 
-__Note__ : On dit que la fonction `factorial` est à récursivité terminale (_tail recursive_). En effet, lors de l'appel récursif, elle ne fait rien d'autre que retourner la valeur de cet appel `else go(n-1, n*acc)`. Par exemple, s'il elle avait retourné `1 + go(n-1, n*acc)`, elle n'aurait pas été à récursivité terminale. Cette notion est important car elle permet au compilateur de transformer cet appel récursif en itérations et donc d'économiser de l'espace dans la pile d'exécution.
+__Note__ : On dit que la fonction `factorial` est à récursivité terminale (_tail recursive_). En effet, lors de l'appel récursif, elle ne fait rien d'autre que retourner la valeur de cet appel `else go(n-1, n*acc)`. Par exemple, s'il elle avait retourné `1 + go(n-1, n*acc)`, elle n'aurait pas été à récursivité terminale. Cette notion est importante car elle permet au compilateur de transformer cet appel récursif en itérations et donc d'économiser de l'espace dans la pile d'exécution.
 
 En scala, il est possible de spécifier que l'on attend que notre fonction soit _tail recursive_ grâce à l'annotation `@annotation.tailrec`. Si ce n'est pas le cas (à cause d'une erreur de notre part), le compilateur nous préviendra.
 
